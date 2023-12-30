@@ -9,16 +9,15 @@ abstract class UserDataSource {
 
 @DriftAccessor(tables: [AppDatabase])
 class UserDao extends DatabaseAccessor<AppDatabase>
-    with _$UserDaoMixin
-    implements UserDataSource{
-      UserDao(super.attachedDatabase);
+  with _$UserDaoMixin
+  implements UserDataSource{
+    UserDao(super.attachedDatabase);
 
-      @override
-      Future<void> createUser() =>
-        attachedDatabase.into(attachedDatabase.users).insert(UsersCompanion.insert(id: const Value(1), login: "admin", password: "admin"));
+    @override
+    Future<void> createUser() =>
+      attachedDatabase.into(attachedDatabase.users).insert(UsersCompanion.insert(id: const Value(1), login: "admin", password: "admin"));
 
-      
-      @override
-      Future<List<User>> getAllUsers() =>
-      select(attachedDatabase.users).get();
-    }
+    @override
+    Future<List<User>> getAllUsers() =>
+    select(attachedDatabase.users).get();
+}

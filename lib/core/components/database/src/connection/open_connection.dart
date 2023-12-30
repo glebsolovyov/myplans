@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 QueryExecutor openConnection(String name) => LazyDatabase(
   () async {
     final rootFolder = await getApplicationDocumentsDirectory();
-    final file = File(path.join(rootFolder.path, "$name.sqlite"));
+    final file = File(path.join("/Users/glebsolovyov/flutter/flutter_projects/myplans", "$name.sqlite"));
     return NativeDatabase(file);
   } 
 );

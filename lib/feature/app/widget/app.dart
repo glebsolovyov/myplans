@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myplans_app/feature/auth/bloc/auth_bloc.dart';
 import 'package:myplans_app/feature/auth/bloc/auth_event.dart';
 
-
 import '../../../core/widget/scope_widgets.dart';
 import '../../initialization/model/dependencies.dart';
 import '../../initialization/widget/dependencies_scope.dart';
@@ -19,21 +18,15 @@ class App extends StatelessWidget {
   final InitializationResult result;
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
-        providers: [ BlocProvider(create: (context) => AuthBloc(authRepository: result.dependencies.authRepository)
-        ..add(const AuthEvent.load())
-        )
-        ],
-        child: ScopesProvider(
-          providers: [
-            ScopeProvider(
-              buildScope: (child) => DependenciesScope(
-                dependencies: result.dependencies,
-                child: child,
-              ),
+  Widget build(BuildContext context) => ScopesProvider(
+        providers: [
+          ScopeProvider(
+            buildScope: (child) => DependenciesScope(
+              dependencies: result.dependencies,
+              child: child,
             ),
-          ],
-          child: const AppContext(),
-        ),
+          ),
+        ],
+        child: const AppContext(),
       );
 }

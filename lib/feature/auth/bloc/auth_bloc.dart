@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../data/auth_repository.dart';
@@ -7,21 +6,34 @@ import 'auth_state.dart';
 
 /// Auth bloc.
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required this.authRepository})
-      : super(const AuthState.idle()) {
+  AuthBloc({required this.authRepository}) : super(const AuthState.idle()) {
     on<AuthEvent>(
-      (event, emit) => event.map(load: (e) => _load(e, emit)),
+      (event, emit) => event.map(
+        load: (e) => _load(e, emit),
+        delete: (e) => _delete(e, emit),
+      ),
     );
   }
 
   ///
   final AuthRepository authRepository;
 
-  Future<void> _load(
-      AuthEvent$Load event, Emitter<AuthState> emit) async {
+  Future<void> _load(AuthEvent$Load event, Emitter<AuthState> emit) async {
     try {
       final users = await authRepository.getAllUsers();
-      return emit(
+      emit(
+        AuthState.loaded(users: users),
+      );
+    } on Object catch (e) {
+      emit(AuthState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  Future<void> _delete(AuthEvent$Delete event, Emitter<AuthState> emit) async {
+    try {
+      final users = await authRepository.getAllUsers();
+      emit(
         AuthState.loaded(users: users),
       );
     } on Object catch (e) {
