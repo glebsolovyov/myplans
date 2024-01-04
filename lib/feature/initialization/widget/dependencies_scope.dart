@@ -1,14 +1,17 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:myplans_app/core/components/database/src/utils/extensions/context_extension.dart';
-
+import '../../../core/utils/mixin/scope_mixin.dart';
 import '../model/dependencies.dart';
+import 'package:flutter/material.dart';
+
+abstract class StoresContainer {
+  Dependencies get dependencies;
+}
 
 /// {@template dependencies_scope}
-/// A widget which is responsible for providing the dependencies.
+/// Widget which is responsible for providing the dependencies.
 /// {@endtemplate}
-class DependenciesScope extends InheritedWidget {
+class DependenciesScope extends InheritedWidget
+    with ScopeMixin
+    implements StoresContainer {
   /// {@macro dependencies_scope}
   const DependenciesScope({
     required super.child,
@@ -16,20 +19,23 @@ class DependenciesScope extends InheritedWidget {
     super.key,
   });
 
-  /// The dependencies
+  @override
   final Dependencies dependencies;
 
-  /// Get the dependencies from the [context].
+  /// The state from the closest instance of this class
+  /// that encloses the given context.
+  ///
+  /// e.g. `DependenciesScope.of(context)`
   static Dependencies of(BuildContext context) =>
-      context.inhOf<DependenciesScope>(listen: false).dependencies;
+      _maybeOf(context)?.dependencies ??
+      ScopeMixin.notFoundInheritedWidgetOfExactType<DependenciesScope>();
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty<Dependencies>('dependencies', dependencies),
-    );
-  }
+  /// Maybe get the dependencies from the widget
+  ///
+  /// The dependencies may not be present if they are not provided higher up
+  /// in the tree.
+  static StoresContainer? _maybeOf(BuildContext context) =>
+      ScopeMixin.scopeMaybeOf<DependenciesScope>(context, listen: false);
 
   @override
   bool updateShouldNotify(DependenciesScope oldWidget) => false;

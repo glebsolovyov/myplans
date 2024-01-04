@@ -8,14 +8,16 @@ import '../model/initialization_progress.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
-mixin InitializationSteps{
-  final initializationSteps = <String, StepAction> {
+mixin InitializationSteps {
+  final initializationSteps = <String, StepAction>{
     "Database": (progress) {
       final database = AppDatabase(name: "myplans");
       return progress.dependencies.database = database;
     },
     "AuthRepository": (progress) {
-      final authRepository = AuthRepositoryImpl(UserDao(progress.dependencies.database),);
+      final authRepository = AuthRepositoryImpl(
+        AuthDao(progress.dependencies.database),
+      );
       return progress.dependencies.authRepository = authRepository;
     }
   };
