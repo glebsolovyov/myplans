@@ -1,23 +1,27 @@
 import 'package:flutter/foundation.dart';
-import 'package:myplans_app/feature/auth/model/user_entity.dart';
+import 'package:myplans_app/core/components/database/database.dart';
 
 import '../../../../core/components/database/src/utils/pattern_match.dart';
+import '../../model/user_entity.dart';
 
 sealed class AuthState extends _$AuthStateBase {
   const AuthState._({
-    required super.users,
+    super.users,
+    super.user,
     super.error,
   });
 
   /// User is idle.
   const factory AuthState.idle({
     List<UserEntity> users,
+    UserEntity user,
     String? error,
   }) = _AuthState$Idle;
 
   /// User is loaded.
   const factory AuthState.loaded({
-    required List<UserEntity> users,
+    List<UserEntity> users,
+    UserEntity user,
     String? error,
   }) = _AuthState$Loaded;
 }
@@ -25,7 +29,8 @@ sealed class AuthState extends _$AuthStateBase {
 /// [AuthState.idle] state matcher.
 final class _AuthState$Idle extends AuthState {
   const _AuthState$Idle({
-    super.users = const [],
+    super.users,
+    super.user,
     super.error,
   }) : super._();
 }
@@ -33,24 +38,28 @@ final class _AuthState$Idle extends AuthState {
 /// [AuthState.loaded] state matcher.
 final class _AuthState$Loaded extends AuthState {
   const _AuthState$Loaded({
-    required super.users,
+    super.users,
+    super.user,
     super.error,
   }) : super._();
 }
 
 @immutable
 abstract base class _$AuthStateBase {
-  const _$AuthStateBase({required this.users, this.error});
+  const _$AuthStateBase({required this.users, required this.user, this.error});
 
   @nonVirtual
-  final List<UserEntity> users;
+  final List<UserEntity>? users;
+
+  @nonVirtual
+  final UserEntity? user;
 
   @nonVirtual
   final String? error;
 
   bool get hasError => error != null;
 
-  bool get hasUsers => users.isNotEmpty;
+  bool get hasUser => user != null;
 
   bool get isLoaded => maybeMap(
         loaded: (_) => true,
@@ -83,5 +92,5 @@ abstract base class _$AuthStateBase {
       );
 
   @override
-  String toString() => 'AuthState(Users: $users, error: $error)';
+  String toString() => 'AuthState(User: $user, error: $error)';
 }

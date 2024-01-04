@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/widget/scope_widgets.dart';
-import '../../auth/bloc/auth/auth_bloc.dart';
-import '../../auth/bloc/auth/auth_event.dart';
-import '../../auth/bloc/user/user_bloc.dart';
+import '../../auth/bloc/user/auth_bloc.dart';
+import '../../auth/bloc/user/auth_event.dart';
 import '../../initialization/model/dependencies.dart';
 import '../../initialization/widget/dependencies_scope.dart';
 import 'app_context.dart';
@@ -23,12 +22,9 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) =>
-                AuthBloc(authRepository: result.dependencies.authRepository),
+                AuthBloc(authRepository: result.dependencies.authRepository)
+                  ..add(const AuthEvent.loadAllUsers()),
           ),
-          BlocProvider(
-            create: (context) =>
-                UserBloc(authRepository: result.dependencies.authRepository),
-          )
         ],
         child: ScopesProvider(
           providers: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myplans_app/core/router/router.dart';
 
 import '../../auth/widget/auth_screen.dart';
 
@@ -7,13 +8,14 @@ class AppContext extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final router = AppRouter();
+    return MaterialApp.router(
+      routerConfig: router.router,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AuthScreen(),
     );
   }
 }

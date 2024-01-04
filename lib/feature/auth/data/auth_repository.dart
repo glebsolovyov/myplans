@@ -9,7 +9,9 @@ abstract class AuthRepository {
   Future<UserEntity?> getUserById({required int id});
   Future<bool> updateUser(
       {required int id, required String login, required String password});
-  Future deleteUser({required int id});
+  Future<int> deleteUser({required int id});
+  Future<bool> login({required String login, required String password});
+  Future<bool> logout({required int id});
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -59,7 +61,17 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future deleteUser({required int id}) {
+  Future<int> deleteUser({required int id}) {
     return _dataSource.deleteUser(id: id);
+  }
+
+  @override
+  Future<bool> login({required String login, required String password}) async {
+    return _dataSource.login(login: login, password: password);
+  }
+
+  @override
+  Future<bool> logout({required int id}) async {
+    return _dataSource.logout(id: id);
   }
 }
